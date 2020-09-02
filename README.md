@@ -36,7 +36,7 @@ passed conform to it, otherwise it doesn't, so you can relax.
 At the moment shlap supports <a href="examples/bash">`bash`</a>, <a
 href="examples/zsh">`zsh`</a>, <a href="examples/fish">`fish`</a>, <a
 href="examples/elvish">`elvish`</a> and <a
-href="examples/powershell">`powershell`</a>.  
+href="examples/pwsh">`powershell`</a>.  
 We are planning to support more shells.  
 If your favourite shell is not supported, make sure to open an issue.
 
