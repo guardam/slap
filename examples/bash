@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# shellcheck disable=SC2154,SC2250
+
+config="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/complete.yml"
+eval "$(cargo r -q -- bash parse _ -- "$@" <"$config")"
+[[ -z "$_success" ]] && exit 1
+
+printf '%s\n' \
+"opt     = '$_opt_vals'
+pos     = '$_pos_vals'
+flag    = '$_flag_vals'
+mode    = '$_mode_vals'
+mvals   = '$_mvals_vals'
+minvals = '$_minvals_vals'
+maxvals = '$_maxvals_vals'
+
+subcommand   -> '$_subcommand'
+subcmd_scopt  = '$_subcmd_scopt_vals'
+subcmd_scpos1 = '$_subcmd_scpos1_vals'"
+

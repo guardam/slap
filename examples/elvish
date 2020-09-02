@@ -1,0 +1,4 @@
+#!/usr/bin/env elvish
+
+echo "As of v0.14.1, elvish doesn't support 'eval' yet"
+
