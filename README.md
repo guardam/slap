@@ -66,7 +66,7 @@ probably contains all the options you'll ever need.
 For additional informations look at [`clap`'s docs](https://docs.rs/clap/2.33.3/clap).
 
 ```bash
-eval "$(cargo r -q -- bash parse _ -- "$@" <<-EOF
+eval "$(slap bash parse _ -- "$@" <<-EOF
 	name: yml_app
 	version: "1.0"
 	about: an example using a .yml file to build a CLI
