@@ -1,6 +1,6 @@
 use {
     clap::{App, AppSettings, Arg},
-    shlap::Shell,
+    slap::Shell,
     std::str,
 };
 

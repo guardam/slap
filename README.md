@@ -1,6 +1,6 @@
-# shlap
+# slap
 
-shlap (shell [`clap`][clap]) - painless argument parsing.
+slap (shell [`clap`][clap]) - painless argument parsing.
 
 ## Why?
 
@@ -11,29 +11,29 @@ This program solves that.
 
 ## How?
 
-You declare your CLI in YAML and pass it to shlap's `stdin` and pass all your
-script's arguments to shlap as arguments.  
-shlap makes sure that the arguments you pass to it conform to your YAML
+You declare your CLI in YAML and pass it to slap's `stdin` and pass all your
+script's arguments to slap as arguments.  
+slap makes sure that the arguments you pass to it conform to your YAML
 description, and if not, it exits with an error code and outputs useful error
 messages to `stderr`.  
-In other words shlap handles the argument parsing logic and validation, your
-script only evalutes the code exported by shlap and uses the parsed arguments.  
+In other words slap handles the argument parsing logic and validation, your
+script only evalutes the code exported by slap and uses the parsed arguments.  
 Here is an example bash script:
 
 ```bash
 config="path to your YAML config"
-eval "$(shlap bash parse -- "$@" <"$config")"
+eval "$(slap bash parse -- "$@" <"$config")"
 ```
 
-The `shlap-parse` subcommand, if the passed arguments conform to the YAML
+The `slap-parse` subcommand, if the passed arguments conform to the YAML
 description, outputs code in the language specified, so you can evaluate it to
 have access to the variables containing the parsed arguments.  
-Relax, shlap writes to `stdout` ONLY if the YAML config is valid and the
+Relax, slap writes to `stdout` ONLY if the YAML config is valid and the
 arguments passed conform to it, otherwise it doesn't.
 
 ## Supported platforms
 
-At the moment shlap supports <a href="examples/bash">`bash`</a>, <a
+At the moment slap supports <a href="examples/bash">`bash`</a>, <a
 href="examples/zsh">`zsh`</a>, <a href="examples/fish">`fish`</a>, <a
 href="examples/elvish">`elvish`</a> and <a
 href="examples/pwsh">`powershell`</a>.  
@@ -42,13 +42,13 @@ If your favourite shell is not supported, make sure to open an issue.
 
 ## Completions script generation
 
-Thanks to [clap](#clap), shlap's underlying engine, automatic
+Thanks to [clap](#clap), slap's underlying engine, automatic
 completions-script generation is supported.
 For example in bash:
 
 ```bash
 config="path to your YAML config"
-shlap bash completions <"$config" >completions.bash
+slap bash completions <"$config" >completions.bash
 ```
 
 `completions.bash` now contains a bash script that provides command
@@ -188,7 +188,7 @@ examples look <a href="examples">here</a>.
 
 ## Elvish
 
-As of `v0.14.1`, elvish doesn't support `eval` yet, so you can use shlap to
+As of `v0.14.1`, elvish doesn't support `eval` yet, so you can use slap to
 generate elvish code, but you can't yet use the generated code inside an
 elvish script.  
 Luckily there is some work going on for this functionality.

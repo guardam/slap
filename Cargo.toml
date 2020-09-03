@@ -1,11 +1,11 @@
 [package]
-name = "shlap"
+name = "slap"
 version = "0.1.0"
 authors = ["Matteo Guarda <matteoguarda@tutanota.com>"]
 description = "Painless shell argument parsing."
 edition = "2018"
 license = "MIT OR Apache-2.0"
-repository = "https://github.com/agnipau/shlap"
+repository = "https://github.com/agnipau/slap"
 readme = "README.md"
 keywords = ["argument", "cli", "arg", "parser", "parse", "clap", "shell", "sh"]
 categories = ["command-line-utilities", "command-line-interface"]

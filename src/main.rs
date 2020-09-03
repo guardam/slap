@@ -4,7 +4,7 @@ use {
     crate::app_wrapper::AppWrapper,
     anyhow::{bail, Context},
     clap::{App, AppSettings, Arg, ArgMatches, SubCommand, YamlLoader},
-    shlap::Shell,
+    slap::Shell,
     std::{
         convert::TryFrom,
         io::{self, Read},
