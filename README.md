@@ -28,8 +28,8 @@ eval "$(shlap bash parse -- "$@" <"$config")"
 The `shlap-parse` subcommand, if the passed arguments conform to the YAML
 description, outputs code in the language specified, so you can evaluate it to
 have access to the variables containing the parsed arguments.  
-shlap writes to `stdout` only if the YAML config is valid and the arguments
-passed conform to it, otherwise it doesn't, so you can relax.
+Relax, shlap writes to `stdout` ONLY if the YAML config is valid and the
+arguments passed conform to it, otherwise it doesn't.
 
 ## Supported platforms
 
