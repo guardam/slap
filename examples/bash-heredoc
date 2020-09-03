@@ -1,71 +1,6 @@
-# shlap
+#!/usr/bin/env bash
+# shellcheck disable=SC2154,SC2250
 
-shlap (shell [`clap`][clap]) - painless argument parsing.
-
-## Why?
-
-Writing code to parse arguments in a shell scripting language (`bash`, `zsh`,
-`fish` etc...) is an extremly verbose, repetitive, error prone, and painful
-process.  
-This program solves that.
-
-## How?
-
-You declare your CLI in YAML and pass it to shlap's `stdin` and pass all your
-script's arguments to shlap as arguments.  
-shlap makes sure that the arguments you pass to it conform to your YAML
-description, and if not, it exits with an error code and outputs useful error
-messages to `stderr`.  
-In other words shlap handles the argument parsing logic and validation, your
-script only evalutes the code exported by shlap and uses the parsed arguments.  
-Here is an example bash script:
-
-```bash
-config="path to your YAML config"
-eval "$(shlap bash parse -- "$@" <"$config")"
-```
-
-The `shlap-parse` subcommand, if the passed arguments conform to the YAML
-description, outputs code in the language specified, so you can evaluate it to
-have access to the variables containing the parsed arguments.  
-Relax, shlap writes to `stdout` ONLY if the YAML config is valid and the
-arguments passed conform to it, otherwise it doesn't.
-
-## Supported platforms
-
-At the moment shlap supports <a href="examples/bash">`bash`</a>, <a
-href="examples/zsh">`zsh`</a>, <a href="examples/fish">`fish`</a>, <a
-href="examples/elvish">`elvish`</a> and <a
-href="examples/pwsh">`powershell`</a>.  
-We are planning to support more shells.  
-If your favourite shell is not supported, make sure to open an issue.
-
-## Completions script generation
-
-Thanks to [clap](#clap), shlap's underlying engine, automatic
-completions-script generation is supported.
-For example in bash:
-
-```bash
-config="path to your YAML config"
-shlap bash completions <"$config" >completions.bash
-```
-
-`completions.bash` now contains a bash script that provides command
-autocompletion for the CLI described in your YAML config file.
-
-## Demo
-
-[![asciicast](https://asciinema.org/a/357515.svg)](https://asciinema.org/a/357515)
-
-## Learning material
-
-This
-[example](https://github.com/clap-rs/clap/blob/v2.33.1/examples/17_yaml.yml)
-probably contains all the options you'll ever need.  
-For additional informations look at [`clap`'s docs](https://docs.rs/clap/2.33.3/clap).
-
-```bash
 eval "$(cargo r -q -- bash parse _ -- "$@" <<-EOF
 	name: yml_app
 	version: "1.0"
@@ -73,7 +8,6 @@ eval "$(cargo r -q -- bash parse _ -- "$@" <<-EOF
 	author: Kevin K. <kbknapp@gmail.com>
 	
 	# AppSettings can be defined as a list and are **not** ascii case sensitive
-	# Look here for all the possible settings: https://docs.rs/clap/2.33.3/clap/enum.AppSettings.html
 	settings:
 	  - ArgRequiredElseHelp
 	
@@ -180,37 +114,4 @@ maxvals = '$_maxvals_vals'
 subcommand   -> '$_subcommand'
 subcmd_scopt  = '$_subcmd_scopt_vals'
 subcmd_scpos1 = '$_subcmd_scpos1_vals'"
-```
 
-For <a href="examples/pwsh">`powershell`</a>, <a
-href="examples/fish">`fish`</a>, <a href="examples/zsh">`zsh`</a> and other
-examples look <a href="examples">here</a>.
-
-## Elvish
-
-As of `v0.14.1`, elvish doesn't support `eval` yet, so you can use shlap to
-generate elvish code, but you can't yet use the generated code inside an
-elvish script.  
-Luckily there is some work going on for this functionality.
-
-## Credits
-
-This program is solely made possible by [clap](#clap), so many thanks to its
-authors.
-
-#### License
-
-<sup>
-Licensed under either of <a href="LICENSE-APACHE">Apache License, Version
-2.0</a> or <a href="LICENSE-MIT">MIT license</a> at your option.
-</sup>
-
-<br>
-
-<sub>
-Unless you explicitly state otherwise, any contribution intentionally submitted
-for inclusion in this crate by you, as defined in the Apache-2.0 license, shall
-be dual licensed as above, without any additional terms or conditions.
-</sub>
-
-[clap]: https://github.com/clap-rs/clap
