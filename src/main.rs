@@ -1,11 +1,14 @@
 mod app_wrapper;
 mod config_checker;
+mod ident_type;
+mod shell;
+
+pub use shell::Shell;
 
 use {
     crate::app_wrapper::AppWrapper,
     anyhow::{bail, Context},
     clap::{App, AppSettings, Arg, ArgMatches, SubCommand, YamlLoader},
-    slap::Shell,
     std::{
         convert::TryFrom,
         io::{self, Read},

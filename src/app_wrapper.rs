@@ -1,6 +1,6 @@
 use {
+    crate::Shell,
     clap::{App, AppSettings, Arg},
-    slap::Shell,
     std::str,
 };
 
