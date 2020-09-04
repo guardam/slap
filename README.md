@@ -1,5 +1,7 @@
 # slap
 
+![Batman slapping Robin meme](./images/batman-slapping-robin.jpg)
+
 slap (shell [`clap`][clap]) - painless argument parsing.
 
 ## Why?
