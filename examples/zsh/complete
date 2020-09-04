@@ -1,8 +1,8 @@
-#!/usr/bin/env fish
+#!/usr/bin/env zsh
 
-set config (printf '%s/complete.yml' (cd (dirname (status -f)) && pwd))
-cargo r -q -- fish parse _ -- $argv <$config | source
-[ -z "$_success" ] && exit 1
+config="$(cd "$(dirname "${(%):-%N}")" && pwd)/../complete.yml"
+eval "$(cargo r -q -- zsh parse _ -- "$@" <"$config")"
+[[ -z "$_success" ]] && exit 1
 
 printf '%s\n' \
 "opt     = '$_opt_vals'

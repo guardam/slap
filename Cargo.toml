@@ -1,7 +1,7 @@
 [package]
 name = "slap"
 version = "0.1.0"
-authors = ["Matteo Guarda <matteoguarda@tutanota.com>"]
+authors = ["Matteo G. <matteoguarda@tutanota.com>"]
 description = "Painless shell argument parsing."
 edition = "2018"
 license = "MIT OR Apache-2.0"

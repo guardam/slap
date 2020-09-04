@@ -1,6 +1,6 @@
 # slap
 
-![Batman slapping Robin meme](./images/batman-slapping-robin.jpg)
+![Batman slapping Robin meme](images/batman-slapping-robin.jpg)
 
 slap (shell [`clap`][clap]) - painless argument parsing.
 
@@ -60,129 +60,90 @@ autocompletion for the CLI described in your YAML config file.
 
 [![asciicast](https://asciinema.org/a/357515.svg)](https://asciinema.org/a/357515)
 
-## Learning material
+## Example
 
-This
-[example](https://github.com/clap-rs/clap/blob/v2.33.1/examples/17_yaml.yml)
-probably contains all the options you'll ever need.  
-For additional informations look at [`clap`'s docs](https://docs.rs/clap/2.33.3/clap).
+Here are two useful bash scripts:
 
 ```bash
 eval "$(slap bash parse _ -- "$@" <<-EOF
-	name: yml_app
-	version: "1.0"
-	about: an example using a .yml file to build a CLI
-	author: Kevin K. <kbknapp@gmail.com>
-	
-	# AppSettings can be defined as a list and are **not** ascii case sensitive
-	# Look here for all the possible settings: https://docs.rs/clap/2.33.3/clap/enum.AppSettings.html
-	settings:
-	  - ArgRequiredElseHelp
-	
-	# All Args must be defined in the 'args:' list where the name of the arg, is the
-	# key to a Hash object
-	args:
-	  # The name of this argument, is 'opt' which will be used to access the value
-	  # later in your Rust code
-	  - opt:
-	      help: example option argument from yaml
-	      short: o
-	      long: option
-	      multiple: true
-	      takes_value: true
-	  - pos:
-	      help: example positional argument from yaml
-	      index: 1
-	      # A list of possible values can be defined as a list
-	      possible_values:
-	        - fast
-	        - slow
-	  - flag:
-	      help: demo flag argument
-	      short: F
-	      multiple: true
-	      global: true
-	      # Conflicts, mutual overrides, and requirements can all be defined as a
-	      # list, where the key is the name of the other argument
-	      conflicts_with:
-	        - opt
-	      requires:
-	        - pos
-	  - mode:
-	      long: mode
-	      help: shows an option with specific values
-	      # possible_values can also be defined in this list format
-	      possible_values: [vi, emacs]
-	      takes_value: true
-	  - mvals:
-	      long: mult-vals
-	      help: demos an option which has two named values
-	      # value names can be described in a list, where the help will be shown
-	      # --mult-vals <one> <two>
-	      value_names:
-	        - one
-	        - two
-	  - minvals:
-	      long: min-vals
-	      multiple: true
-	      help: you must supply at least two values to satisfy me
-	      min_values: 2
-	  - maxvals:
-	      long: max-vals
-	      multiple: true
-	      help: you can only supply a max of 3 values for me!
-	      max_values: 3
-	
-	# All subcommands must be listed in the 'subcommand:' object, where the key to
-	# the list is the name of the subcommand, and all settings for that command are
-	# are part of a Hash object
-	subcommands:
-	  # The name of this subcommand will be 'subcmd' which can be accessed in your
-	  # Rust code later
-	  - subcmd:
-	      about: demos subcommands from yaml
-	      version: "0.1"
-	      author: Kevin K. <kbknapp@gmail.com>
-	      # Subcommand args are exactly like App args
-	      args:
-	        - scopt:
-	            short: B
-	            multiple: true
-	            help: example subcommand option
-	            takes_value: true
-	        - scpos1:
-	            help: example subcommand positional
-	            index: 1
-	
-	# ArgGroups are supported as well, and must be specified in the 'groups:'
-	# object of this file
-	groups:
-	  # the name of the ArgGoup is specified here
-	  - min-max-vals:
-	      # All args and groups that are a part of this group are set here
-	      args:
-	        - minvals
-	        - maxvals
-	      # setting conflicts is done the same manner as setting 'args:'
-	      #
-	      # to make this group required, you could set 'required: true' but for
-	      # this example we won't do that.
+name: gh-repo-list
+version: "1.0"
+about: Outputs JSON containing useful informations about your GitHub repos.
+
+settings:
+    - ArgRequiredElseHelp
+
+args:
+    - username:
+        help: your GitHub username
+        required: true
+    - password:
+        help: your GitHub password
+        required: true
+    - iterations:
+        help: the number of iterations to do. 0 means there is no limit
+        long: iterations
+        short: i
+        default_value: "0"
 EOF
-)"; [[ -z "$_success" ]] && exit 1
+)"; [[ -z "${_success}" ]] && exit 1
 
-printf '%s\n' \
-"opt     = '$_opt_vals'
-pos     = '$_pos_vals'
-flag    = '$_flag_vals'
-mode    = '$_mode_vals'
-mvals   = '$_mvals_vals'
-minvals = '$_minvals_vals'
-maxvals = '$_maxvals_vals'
+page=1
+while :; do
+    data="$(curl -s -X GET \
+        -u "${_username_vals}:${_password_vals}" \
+    "https://api.github.com/user/repos?page=${page}&per_page100&type=all")"
+    len="$(printf '%s\n' "${data}" | jq '. | length')"
+    [[ "${_iterations_vals}" == "0" && "${len}" == 0 ]] && break
+    printf '%s\n' "${data}"
+    [[ "${page}" == "${_iterations_vals}" ]] && break
+    page="$((page + 1))"
+done
 
-subcommand   -> '$_subcommand'
-subcmd_scopt  = '$_subcmd_scopt_vals'
-subcmd_scpos1 = '$_subcmd_scpos1_vals'"
 ```
+
+```bash
+eval "$(slap bash parse _ -- "$@" <<-EOF
+name: gh-clone-repos
+version: "1.0"
+about: Uses 'gh-repo-list' to clone all your GitHub repos.
+
+settings:
+    - ArgRequiredElseHelp
+
+args:
+    - username:
+        help: your GitHub username
+        required: true
+    - password:
+        help: your GitHub password
+        required: true
+    - git_options:
+        help: "additional Git options (for example: --git-options '--depth 1')"
+        long: git-options
+        takes_value: true
+        short: o
+        allow_hyphen_values: true
+EOF
+)"; [[ -z "${_success}" ]] && exit 1
+
+for repo in $(gh-repo-list "${_username_vals}" "${_password_vals}" \
+    | jq -r "map(.ssh_url) | join(\"\n\")"); do
+    if [[ -n "${_git_options_occurs}" ]]; then
+        eval "git clone ${_git_options_vals} ${repo}"
+    else
+        git clone "${repo}"
+    fi
+done
+
+```
+
+## Learning material
+
+This YAML <a href="examples/complete.yml">config</a> probably contains all the
+options you'll ever need.  
+For additional informations look at [`clap`'s
+docs](https://docs.rs/clap/2.33.3/clap).
 
 For <a href="examples/pwsh">`powershell`</a>, <a
 href="examples/fish">`fish`</a>, <a href="examples/zsh">`zsh`</a> and other

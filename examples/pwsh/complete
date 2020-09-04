@@ -1,6 +1,6 @@
 #!/usr/bin/env pwsh
 
-$config = "$($ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath('.\'))/complete.yml"
+$config = "$($ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath('.\'))/../complete.yml"
 $code = $(cat $config `
     | cargo r -q -- pwsh parse _ -- $args `
     | Out-String)
