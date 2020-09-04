@@ -1,4 +1,5 @@
 mod app_wrapper;
+mod config_checker;
 
 use {
     crate::app_wrapper::AppWrapper,
@@ -10,6 +11,7 @@ use {
         io::{self, Read},
         str,
     },
+    yaml_rust::Yaml,
 };
 
 fn this_cli() -> ArgMatches<'static> {
@@ -73,11 +75,8 @@ fn run() -> anyhow::Result<()> {
         .clone()
         .into_hash()
         .context("Invalid YAML config")?;
-    // We must check this ourselves because if you don't specify a name in the YAML config clap
-    // screws up, probably this is a clap bug.
-    if !yaml_config.contains_key(&YamlLoader::load_from_str("name").unwrap()[0]) {
-        bail!("YAML config must contain a 'name' entry");
-    }
+    config_checker::required(&yaml_config)?;
+    config_checker::banned(&yaml_config)?;
     let external_app_subcommands = {
         let subcommands_loader = YamlLoader::load_from_str("subcommands").ok();
         let subcommands_key = subcommands_loader.as_ref().map(|x| &x[0]).unwrap();
@@ -102,7 +101,7 @@ fn run() -> anyhow::Result<()> {
                 let new_yaml_content = {
                     let mut buffer = String::new();
                     let mut emitter = yaml_rust::YamlEmitter::new(&mut buffer);
-                    let yaml_hash = yaml_rust::Yaml::Hash(yaml_config);
+                    let yaml_hash = Yaml::Hash(yaml_config);
                     emitter.dump(&yaml_hash).unwrap();
                     buffer
                 };
