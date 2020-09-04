@@ -44,7 +44,7 @@ If your favourite shell is not supported, make sure to open an issue.
 
 ## Completions script generation
 
-Thanks to [clap](#clap), slap's underlying engine, automatic
+Thanks to [clap][clap], slap's underlying engine, automatic
 completions-script generation is supported.
 For example in bash:
 
@@ -160,7 +160,7 @@ Luckily there is some work going on for this functionality.
 
 ## Credits
 
-This program is solely made possible by [clap](#clap), so many thanks to its
+This program is solely made possible by [clap][clap], so many thanks to its
 authors.
 
 #### License
