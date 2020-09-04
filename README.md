@@ -72,6 +72,7 @@ about: Outputs JSON containing useful informations about your GitHub repos.
 
 settings:
     - ArgRequiredElseHelp
+    - ColoredHelp
 
 args:
     - username:
@@ -110,6 +111,7 @@ about: Uses 'gh-repo-list' to clone all your GitHub repos.
 
 settings:
     - ArgRequiredElseHelp
+    - ColoredHelp
 
 args:
     - username:

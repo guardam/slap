@@ -10,6 +10,7 @@ eval "$(cargo r -q -- bash parse _ -- "$@" <<-EOF
 	# AppSettings can be defined as a list and are **not** ascii case sensitive
 	settings:
 	  - ArgRequiredElseHelp
+      - ColoredHelp
 	
 	# All Args must be defined in the 'args:' list where the name of the arg, is the
 	# key to a Hash object
