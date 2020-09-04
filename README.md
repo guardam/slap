@@ -33,6 +33,16 @@ have access to the variables containing the parsed arguments.
 Relax, slap writes to `stdout` ONLY if the YAML config is valid and the
 arguments passed conform to it, otherwise it doesn't.
 
+## Installation
+
+This will install you a binary named `slap`.
+
+```bash
+cargo install slap-cli
+```
+
+Make sure to add `~/.cargo/bin` to your `$PATH`.
+
 ## Supported platforms
 
 At the moment slap supports <a href="examples/bash">`bash`</a>, <a
