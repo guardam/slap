@@ -18,7 +18,7 @@ use {
 };
 
 fn this_cli() -> ArgMatches<'static> {
-    App::new(clap::crate_name!())
+    App::new("slap")
         .version(clap::crate_version!())
         .author(clap::crate_authors!("\n"))
         .about(clap::crate_description!())

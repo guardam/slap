@@ -1,6 +1,6 @@
 [package]
 name = "slap-cli"
-version = "0.1.0"
+version = "1.0.0"
 authors = ["Matteo G. <matteoguarda@tutanota.com>"]
 description = "Painless shell argument parsing."
 edition = "2018"
