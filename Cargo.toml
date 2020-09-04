@@ -9,6 +9,9 @@ repository = "https://github.com/agnipau/slap"
 readme = "README.md"
 keywords = ["argument", "cli", "arg", "parser", "parse", "clap", "shell", "sh"]
 categories = ["command-line-utilities", "command-line-interface"]
+exclude = [
+    "examples/*",
+]
 
 [dependencies]
 # Crucial to use this version.
