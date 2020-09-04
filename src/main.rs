@@ -80,38 +80,38 @@ fn run() -> anyhow::Result<()> {
     }
     let external_app_subcommands = {
         let subcommands_loader = YamlLoader::load_from_str("subcommands").ok();
-        match subcommands_loader.as_ref().map(|x| &x[0]) {
-            Some(subcommands_key) => {
-                let external_app_subcommands = {
-                    let external_app_subcommands = yaml_config[subcommands_key]
-                        .as_vec()
-                        .context("Subcommands object must be an array of maps")?
-                        .into_iter()
-                        .map(SubCommand::from_yaml)
-                        .map(|x| Ok::<_, anyhow::Error>(AppWrapper::new(x, |app| app)?));
-                    let mut xs = Vec::new();
-                    for subcmd in external_app_subcommands {
-                        xs.push(subcmd?);
-                    }
-                    xs
-                };
+        let subcommands_key = subcommands_loader.as_ref().map(|x| &x[0]).unwrap();
+        if let Some(subcommands) = yaml_config.get(subcommands_key) {
+            let external_app_subcommands = {
+                let external_app_subcommands = subcommands
+                    .as_vec()
+                    .context("Subcommands object must be an array of maps")?
+                    .into_iter()
+                    .map(SubCommand::from_yaml)
+                    .map(|x| Ok::<_, anyhow::Error>(AppWrapper::new(x, |app| app)?));
+                let mut xs = Vec::new();
+                for subcmd in external_app_subcommands {
+                    xs.push(subcmd?);
+                }
+                xs
+            };
 
-                yaml_loader = {
-                    let mut yaml_config = yaml_config.clone();
-                    yaml_config.remove_entry(subcommands_key);
-                    let new_yaml_content = {
-                        let mut buffer = String::new();
-                        let mut emitter = yaml_rust::YamlEmitter::new(&mut buffer);
-                        let yaml_hash = yaml_rust::Yaml::Hash(yaml_config);
-                        emitter.dump(&yaml_hash).unwrap();
-                        buffer
-                    };
-                    YamlLoader::load_from_str(&new_yaml_content)?[0].clone()
+            yaml_loader = {
+                let mut yaml_config = yaml_config.clone();
+                yaml_config.remove_entry(subcommands_key);
+                let new_yaml_content = {
+                    let mut buffer = String::new();
+                    let mut emitter = yaml_rust::YamlEmitter::new(&mut buffer);
+                    let yaml_hash = yaml_rust::Yaml::Hash(yaml_config);
+                    emitter.dump(&yaml_hash).unwrap();
+                    buffer
                 };
+                YamlLoader::load_from_str(&new_yaml_content)?[0].clone()
+            };
 
-                external_app_subcommands
-            }
-            None => Vec::new(),
+            external_app_subcommands
+        } else {
+            Vec::new()
         }
     };
 
