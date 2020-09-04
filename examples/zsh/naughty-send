@@ -1,9 +1,8 @@
-#!/usr/bin/env bash
-# shellcheck disable=SC2154
+#!/usr/bin/env zsh
 #
 # See: https://awesomewm.org/doc/api/libraries/naughty.html
 
-eval "$(cargo r -q -- bash parse _ -- "$@" <<-EOF
+eval "$(cargo r -q -- zsh parse _ -- "$@" <<-EOF
 name: naughty-send
 version: "1.0"
 author: Matteo G. <matteoguarda@tutanota.com>
