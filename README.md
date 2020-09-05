@@ -2,7 +2,7 @@
 
 ![Batman slapping Robin meme](images/batman-slapping-robin.jpg)
 
-slap (shell [`clap`][clap]) - painless argument parsing.
+slap (shell [`clap`][clap]) - painless argument parsing and dependency check.
 
 ## Why?
 
