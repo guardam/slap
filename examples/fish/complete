@@ -2,7 +2,7 @@
 
 cargo r -q -- deps dirname pwd || exit 1
 
-set config (printf '%s/../complete.yml' (cd (dirname (status -f)) && pwd))
+set config (printf '%s/../complete.yml' (cargo r -q -- path -d (status -f)))
 cargo r -q -- parse fish _ -- $argv <$config | source
 [ -z "$_success" ] && exit 1
 

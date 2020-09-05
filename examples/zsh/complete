@@ -2,7 +2,7 @@
 
 cargo r -q -- deps dirname pwd || exit 1
 
-config="$(cd "$(dirname "${(%):-%N}")" && pwd)/../complete.yml"
+config="$(cargo r -q -- path -d "${(%):-%N}")/../complete.yml"
 eval "$(cargo r -q -- parse zsh _ -- "$@" <"$config")"
 [[ -z "$_success" ]] && exit 1
 
