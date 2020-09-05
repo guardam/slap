@@ -1,5 +1,7 @@
 #!/usr/bin/env zsh
 
+cargo r -q -- deps jq git || exit 1
+
 eval "$(cargo r -q -- parse zsh _ -- "$@" <<-EOF
 name: gh-clone-repos
 version: "1.0"
