@@ -1,6 +1,6 @@
 # slap
 
-![Batman slapping Robin meme](images/batman-slapping-robin.jpg)
+![Batman slapping Robin meme](https://raw.githubusercontent.com/agnipau/slap/screenshots/batman-slapping-robin.jpg)
 
 slap (shell [`clap`][clap]) - painless argument parsing.
 
