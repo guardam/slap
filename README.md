@@ -79,6 +79,21 @@ If `curl` and `jq` are found in `$PATH` the script will continue its execution
 and nothing will be printed, otherwise an error will be written to `stderr` and
 slap will exit with a non-zero exit code.
 
+## Absolute path of a script
+
+slap includes a `path` subcommand that simplifies getting the absolute path of
+a script:
+
+```bash
+# before
+abs="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+```
+
+```
+# with slap
+abs="$(slap path -d "${BASH_SOURCE[0]}")"
+```
+
 ## Demo
 
 [![asciicast](https://asciinema.org/a/357515.svg)](https://asciinema.org/a/357515)
