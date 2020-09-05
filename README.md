@@ -60,7 +60,7 @@ For example in bash:
 
 ```bash
 config="path to your YAML config"
-slap bash completions <"$config" >completions.bash
+slap completions bash <"$config" >completions.bash
 ```
 
 `completions.bash` now contains a bash script that provides command
