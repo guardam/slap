@@ -15,13 +15,13 @@ settings:
 
 args:
     - username:
-        help: your GitHub username
+        help: Your GitHub username
         required: true
     - password:
-        help: your GitHub password
+        help: Your GitHub password
         required: true
     - git_options:
-        help: "additional Git options (for example: --git-options '--depth 1')"
+        help: "Additional Git options (for example: --git-options '--depth 1')"
         long: git-options
         takes_value: true
         short: o

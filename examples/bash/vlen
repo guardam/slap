@@ -16,7 +16,7 @@ settings:
 
 args:
     - dir:
-        help: the dir where to start searching from
+        help: The dir where to start searching from
         default_value: .
 EOF
 )"; [[ -z "${_success}" ]] && exit 1
