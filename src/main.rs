@@ -12,7 +12,9 @@ use {
     clap::{App, AppSettings, Arg, ArgMatches, SubCommand, YamlLoader},
     std::{
         convert::TryFrom,
+        env,
         io::{self, Read},
+        path::Path,
         process, str,
     },
     yaml_rust::Yaml,
@@ -103,7 +105,45 @@ fn this_cli() -> ArgMatches<'static> {
                         .requires("all")
                 ),
         )
+        .subcommand(
+            SubCommand::with_name("path")
+                .about("Gives you the absolute path given the relative path of a script")
+                .arg(
+                    Arg::with_name("SCRIPT_RELATIVE_PATH")
+                        .help("Relative path of your script. For example in bash: `slap path \"${BASH_SOURCE[0]}\"`, in fish: `slap path (status -f)`, in zsh: `slap path \"${(%):-%N}\"`")
+                        .index(1)
+                        .required(true)
+                )
+                .arg(
+                    Arg::with_name("dir_only")
+                        .long("dir-only")
+                        .short("d")
+                        .help("Gives you the absolute path of the script without including the script name")
+                )
+        )
         .get_matches()
+}
+
+fn handle_path_subcmd(matches: &ArgMatches) -> anyhow::Result<()> {
+    let relativep = matches.value_of("SCRIPT_RELATIVE_PATH").unwrap();
+    let relativep = Path::new(relativep);
+    let script_name = relativep
+        .file_name()
+        .with_context(|| format!("Can't get file name of path '{}'", relativep.display()))?;
+
+    let dirname = relativep
+        .parent()
+        .context("Can't get parent path of root (/)")?;
+    env::set_current_dir(dirname)
+        .with_context(|| format!("Failed to cd in '{}'", dirname.display()))?;
+    let mut current_dir = env::current_dir()?;
+    if !matches.is_present("dir_only") {
+        current_dir = current_dir.join(script_name);
+    }
+
+    println!("{}", current_dir.display());
+
+    Ok(())
 }
 
 fn run() -> anyhow::Result<()> {
@@ -113,6 +153,10 @@ fn run() -> anyhow::Result<()> {
         Some(Ok(())) => return Ok(()),
         Some(Err(_)) => process::exit(1),
         None => {}
+    }
+
+    if let Some(matches) = matches.subcommand_matches("path") {
+        return handle_path_subcmd(matches);
     }
 
     // Clap doesn't let us redirect --help and --version to stderr so we have to do it manually.
