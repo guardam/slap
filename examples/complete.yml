@@ -9,6 +9,7 @@ author: Kevin K. <kbknapp@gmail.com>
 settings:
   - ArgRequiredElseHelp
   - ColoredHelp
+  - ColorAuto
 
 # All Args must be defined in the 'args:' list where the name of the arg, is the
 # key to a Hash object

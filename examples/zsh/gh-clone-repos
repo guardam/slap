@@ -11,6 +11,7 @@ about: Uses 'gh-repo-list' to clone all your GitHub repos.
 settings:
     - ArgRequiredElseHelp
     - ColoredHelp
+    - ColorAuto
 
 args:
     - username:
