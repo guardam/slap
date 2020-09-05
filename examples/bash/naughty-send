@@ -3,7 +3,7 @@
 #
 # See: https://awesomewm.org/doc/api/libraries/naughty.html
 
-eval "$(cargo r -q -- bash parse _ -- "$@" <<-EOF
+eval "$(cargo r -q -- parse bash _ -- "$@" <<-EOF
 name: naughty-send
 version: "1.0"
 author: Matteo G. <matteoguarda@tutanota.com>

@@ -24,7 +24,7 @@ Here is an example bash script:
 
 ```bash
 config="path to your YAML config"
-eval "$(slap bash parse -- "$@" <"$config")"
+eval "$(slap parse bash -- "$@" <"$config")"
 ```
 
 The `slap-parse` subcommand, if the passed arguments conform to the YAML
@@ -75,7 +75,7 @@ autocompletion for the CLI described in your YAML config file.
 Here are two useful bash scripts:
 
 ```bash
-eval "$(slap bash parse _ -- "$@" <<-EOF
+eval "$(slap parse bash _ -- "$@" <<-EOF
 name: gh-repo-list
 version: "1.0"
 about: Outputs JSON containing useful informations about your GitHub repos.
@@ -114,7 +114,7 @@ done
 ```
 
 ```bash
-eval "$(slap bash parse _ -- "$@" <<-EOF
+eval "$(slap parse bash _ -- "$@" <<-EOF
 name: gh-clone-repos
 version: "1.0"
 about: Uses 'gh-repo-list' to clone all your GitHub repos.

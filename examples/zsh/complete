@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 
 config="$(cd "$(dirname "${(%):-%N}")" && pwd)/../complete.yml"
-eval "$(cargo r -q -- zsh parse _ -- "$@" <"$config")"
+eval "$(cargo r -q -- parse zsh _ -- "$@" <"$config")"
 [[ -z "$_success" ]] && exit 1
 
 printf '%s\n' \

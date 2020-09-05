@@ -2,7 +2,7 @@
 
 $config = "$($ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath('.\'))/../complete.yml"
 $code = $(cat $config `
-    | cargo r -q -- pwsh parse _ -- $args `
+    | cargo r -q -- parse pwsh _ -- $args `
     | Out-String)
 if ([string]::IsNullOrWhiteSpace($code)) {
     Exit 1

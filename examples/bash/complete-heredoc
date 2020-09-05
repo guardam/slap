@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC2154,SC2250
 
-eval "$(cargo r -q -- bash parse _ -- "$@" <<-EOF
+eval "$(cargo r -q -- parse bash _ -- "$@" <<-EOF
 	name: yml_app
 	version: "1.0"
 	about: an example using a .yml file to build a CLI

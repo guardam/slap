@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 
-eval "$(cargo r -q -- zsh parse _ -- "$@" <<-EOF
+eval "$(cargo r -q -- parse zsh _ -- "$@" <<-EOF
 	name: yml_app
 	version: "1.0"
 	about: an example using a .yml file to build a CLI

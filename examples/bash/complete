@@ -2,7 +2,7 @@
 # shellcheck disable=SC2154,SC2250
 
 config="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/../complete.yml"
-eval "$(cargo r -q -- bash parse _ -- "$@" <"$config")"
+eval "$(cargo r -q -- parse bash _ -- "$@" <"$config")"
 [[ -z "$_success" ]] && exit 1
 
 printf '%s\n' \
