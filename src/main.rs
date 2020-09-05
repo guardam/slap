@@ -1,9 +1,10 @@
 mod app_wrapper;
 mod config_checker;
+mod dependencies;
 mod ident_type;
 mod shell;
 
-pub use shell::Shell;
+pub use {dependencies::Dependencies, shell::Shell};
 
 use {
     crate::app_wrapper::AppWrapper,
@@ -12,7 +13,7 @@ use {
     std::{
         convert::TryFrom,
         io::{self, Read},
-        str,
+        process, str,
     },
     yaml_rust::Yaml,
 };
@@ -25,33 +26,81 @@ fn this_cli() -> ArgMatches<'static> {
         .settings(&[
             AppSettings::ArgRequiredElseHelp,
             AppSettings::SubcommandRequiredElseHelp,
+            AppSettings::ColoredHelp,
+            AppSettings::ColorAuto,
         ])
-        .arg(
-            Arg::with_name("SHELL")
-                .help("The target shell")
-                .index(1)
-                .required(true)
-                .possible_values(&Shell::SHELLS),
-        )
         .subcommand(
             SubCommand::with_name("completions")
-                .about("Output a completions script for the specified shell"),
+                .about("Output a completions script for the specified shell")
+                .arg(
+                    Arg::with_name("SHELL")
+                        .help("The target shell")
+                        .index(1)
+                        .required(true)
+                        .possible_values(&Shell::SHELLS),
+                )
         )
         .subcommand(
             SubCommand::with_name("parse")
                 .about("Check the passed arguments and output code intended to be evaluated by your shell")
                 .arg(
+                    Arg::with_name("SHELL")
+                        .help("The target shell")
+                        .index(1)
+                        .required(true)
+                        .possible_values(&Shell::SHELLS),
+                )
+                .arg(
                     Arg::with_name("VAR_PREFIX")
                         .help("The prefix to use for the exported variables")
-                        .index(1),
+                        .index(2),
                 )
                 .arg(
                     Arg::with_name("EXTERNAL_ARGS")
                         .help("Arguments to parse using the YAML config passed to STDIN")
-                        .index(2)
+                        .index(3)
                         .raw(true)
                         .allow_hyphen_values(true)
                         .multiple(true),
+                ),
+        )
+        .subcommand(
+            SubCommand::with_name("deps")
+                .about("Check that your sh script dependencies are present in $PATH")
+                .arg(
+                    Arg::with_name("DEPENDENCIES")
+                        .help("Your sh script dependencies")
+                        .index(1)
+                        .multiple(true)
+                        .required(true)
+                )
+                .arg(
+                    Arg::with_name("failed")
+                        .help("Lists every dependency not found in $PATH")
+                        .long("failed")
+                        .short("f")
+                        .conflicts_with_all(&["succeded", "all"])
+                )
+                .arg(
+                    Arg::with_name("succeded")
+                        .help("Lists the absolute path of every dependency found in $PATH")
+                        .long("succeded")
+                        .short("s")
+                        .conflicts_with_all(&["failed", "all"])
+                )
+                .arg(
+                    Arg::with_name("all")
+                        .help("Outputs a JSON containing succeded and failed dependencies (can easily be parsed using jq)")
+                        .long("all")
+                        .short("a")
+                        .conflicts_with_all(&["failed", "succeded"])
+                )
+                .arg(
+                    Arg::with_name("pretty")
+                        .help("Pretty print the JSON output")
+                        .long("pretty")
+                        .short("p")
+                        .requires("all")
                 ),
         )
         .get_matches()
@@ -59,7 +108,12 @@ fn this_cli() -> ArgMatches<'static> {
 
 fn run() -> anyhow::Result<()> {
     let matches = this_cli();
-    let shell = Shell::try_from(matches.value_of("SHELL").unwrap()).unwrap();
+
+    match Dependencies::check(&matches) {
+        Some(Ok(())) => return Ok(()),
+        Some(Err(_)) => process::exit(1),
+        None => {}
+    }
 
     // Clap doesn't let us redirect --help and --version to stderr so we have to do it manually.
     // This block of code parses the subcommands into a Vec<AppWrapper> and removes from the
@@ -135,12 +189,14 @@ fn run() -> anyhow::Result<()> {
 
     // FIXME: Fix ZSH not generating the code for completion.
     if matches.subcommand_matches("completions").is_some() {
+        let shell = Shell::try_from(matches.value_of("SHELL").unwrap()).unwrap();
         let completions_script = external_app.completions_script(&name, &shell)?;
         println!("{}", completions_script);
         return Ok(());
     }
 
     if let Some(matches) = matches.subcommand_matches("parse") {
+        let shell = Shell::try_from(matches.value_of("SHELL").unwrap()).unwrap();
         let mut external_args = matches
             .values_of("EXTERNAL_ARGS")
             .map(|x| x.collect::<Vec<_>>())

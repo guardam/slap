@@ -1,6 +1,8 @@
 #!/usr/bin/env zsh
 
-eval "$(cargo r -q -- zsh parse _ -- "$@" <<-EOF
+cargo r -q -- deps curl jq || exit 1
+
+eval "$(cargo r -q -- parse zsh _ -- "$@" <<-EOF
 name: gh-repo-list
 version: "1.0"
 author: Matteo G. <matteoguarda@tutanota.com>

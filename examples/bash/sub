@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC2154
 
-eval "$(cargo r -q -- bash parse _ -- "$@" <<-EOF
+cargo r -q -- deps rg xargs sed || exit 1
+
+eval "$(cargo r -q -- parse bash _ -- "$@" <<-EOF
 name: sub
 version: "1.0"
 author: Matteo G. <matteoguarda@tutanota.com>

@@ -3,7 +3,9 @@
 #
 # See: https://awesomewm.org/doc/api/libraries/naughty.html
 
-eval "$(cargo r -q -- bash parse _ -- "$@" <<-EOF
+cargo r -q -- deps awsome-client cut || exit 1
+
+eval "$(cargo r -q -- parse bash _ -- "$@" <<-EOF
 name: naughty-send
 version: "1.0"
 author: Matteo G. <matteoguarda@tutanota.com>
@@ -113,8 +115,6 @@ args:
         default_value: "false"
 EOF
 )"; [[ -z "${_success}" ]] && exit 1
-
-# check-requirements-wrapper awesome-client
 
 quote_or_nil() {
     occurs="_$1_occurs"

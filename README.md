@@ -2,7 +2,7 @@
 
 ![Batman slapping Robin meme](https://raw.githubusercontent.com/agnipau/slap/screenshots/batman-slapping-robin.jpg)
 
-slap (shell [`clap`][clap]) - painless argument parsing.
+slap (shell [`clap`][clap]) - painless argument parsing and dependency check.
 
 ## Why?
 
@@ -24,7 +24,7 @@ Here is an example bash script:
 
 ```bash
 config="path to your YAML config"
-eval "$(slap bash parse -- "$@" <"$config")"
+eval "$(slap parse bash -- "$@" <"$config")"
 ```
 
 The `slap-parse` subcommand, if the passed arguments conform to the YAML
@@ -66,6 +66,19 @@ slap bash completions <"$config" >completions.bash
 `completions.bash` now contains a bash script that provides command
 autocompletion for the CLI described in your YAML config file.
 
+## Dependency check
+
+If your script depends on some programs you can check if they are in `$PATH`
+with the `deps` subcommand:
+
+```bash
+slap deps curl jq || exit 1
+```
+
+If `curl` and `jq` are found in `$PATH` the script will continue its execution
+and nothing will be printed, otherwise an error will be written to `stderr` and
+slap will exit with a non-zero exit code.
+
 ## Demo
 
 [![asciicast](https://asciinema.org/a/357515.svg)](https://asciinema.org/a/357515)
@@ -75,7 +88,9 @@ autocompletion for the CLI described in your YAML config file.
 Here are two useful bash scripts:
 
 ```bash
-eval "$(slap bash parse _ -- "$@" <<-EOF
+slap deps curl jq || exit 1
+
+eval "$(slap parse bash _ -- "$@" <<-EOF
 name: gh-repo-list
 version: "1.0"
 about: Outputs JSON containing useful informations about your GitHub repos.
@@ -110,11 +125,12 @@ while :; do
     [[ "${page}" == "${_iterations_vals}" ]] && break
     page="$((page + 1))"
 done
-
 ```
 
 ```bash
-eval "$(slap bash parse _ -- "$@" <<-EOF
+slap deps jq git || exit 1
+
+eval "$(slap parse bash _ -- "$@" <<-EOF
 name: gh-clone-repos
 version: "1.0"
 about: Uses 'gh-repo-list' to clone all your GitHub repos.
@@ -147,7 +163,6 @@ for repo in $(gh-repo-list "${_username_vals}" "${_password_vals}" \
         git clone "${repo}"
     fi
 done
-
 ```
 
 ## Learning material

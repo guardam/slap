@@ -1,7 +1,9 @@
 #!/usr/bin/env fish
 
+cargo r -q -- deps dirname pwd || exit 1
+
 set config (printf '%s/../complete.yml' (cd (dirname (status -f)) && pwd))
-cargo r -q -- fish parse _ -- $argv <$config | source
+cargo r -q -- parse fish _ -- $argv <$config | source
 [ -z "$_success" ] && exit 1
 
 printf '%s\n' \
