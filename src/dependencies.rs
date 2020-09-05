@@ -90,6 +90,7 @@ impl<'a> Dependencies<'a> {
                 }
             }
         }
+        stderr.set_color(color_spec.set_fg(None).set_bold(false))?;
         Ok(())
     }
 
