@@ -35,7 +35,8 @@ arguments passed conform to it, otherwise it doesn't.
 
 ## Installation
 
-You can either download a pre-compiled binary from the
+You can either download a pre-compiled binary (for `linux`, `linux-arm`,
+`macos`, `win-msvc`, `win-gnu`, `win32-msvc`) from the
 [Releases](https://github.com/agnipau/slap/releases), or use cargo.
 
 ### Cargo
