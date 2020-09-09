@@ -35,6 +35,11 @@ arguments passed conform to it, otherwise it doesn't.
 
 ## Installation
 
+You can either download a pre-compiled binary from the
+[Releases](https://github.com/agnipau/slap/releases), or use cargo.
+
+### Cargo
+
 This will install you a binary named `slap`.
 
 ```bash
