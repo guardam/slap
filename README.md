@@ -9,7 +9,7 @@ slap (shell [`clap`][clap]) - painless argument parsing and dependency check.
 Writing code to parse arguments in a shell scripting language (`bash`, `zsh`,
 `fish` etc...) is an extremly verbose, repetitive, error prone, and painful
 process.  
-This program solves that.
+This program aims to improve that.
 
 ## How?
 
