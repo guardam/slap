@@ -35,19 +35,24 @@ arguments passed conform to it, otherwise it doesn't.
 
 ## Installation
 
-You can either download a pre-compiled binary (for `linux`, `linux-arm`,
-`macos`, `win-msvc`, `win-gnu`, `win32-msvc`) from the
-[Releases](https://github.com/agnipau/slap/releases), or use cargo.
-
-### Cargo
-
-This will install you a binary named `slap`.
+If you're an **Arch Linux** user, you can install slap from the [AUR](https://aur.archlinux.org/packages/slap-cli-bin/):
 
 ```bash
+# This will install a binary named `slap`.
+yay -S slap-cli-bin
+```
+
+If you're a **Rust programmer**, you can install slap with `cargo`.
+Make sure to add `~/.cargo/bin` to your `$PATH`.
+
+```bash
+# This will install a binary named `slap`.
 cargo install slap-cli
 ```
 
-Make sure to add `~/.cargo/bin` to your `$PATH`.
+You can also download a pre-compiled binary (for `linux`, `linux-arm`, `macos`,
+`win-msvc`, `win-gnu`, `win32-msvc`) from the
+[Releases](https://github.com/agnipau/slap/releases).
 
 ## Supported platforms
 
