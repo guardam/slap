@@ -4,6 +4,10 @@ name: myapp
 version: "1.0"
 author: Kevin K. <kbknapp@gmail.com>
 about: Does awesome things
+
+global_settings:
+  - ColoredHelp
+
 args:
   - config:
       short: c

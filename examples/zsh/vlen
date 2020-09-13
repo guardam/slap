@@ -10,8 +10,10 @@ about: Searches for all videos starting from a given directory and outputs the c
 
 settings:
     - ArgRequiredElseHelp
-    - ColoredHelp
     - ColorAuto
+
+global_settings:
+    - ColoredHelp
 
 args:
     - dir:

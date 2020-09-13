@@ -28,8 +28,10 @@ fn this_cli() -> ArgMatches<'static> {
         .settings(&[
             AppSettings::ArgRequiredElseHelp,
             AppSettings::SubcommandRequiredElseHelp,
-            AppSettings::ColoredHelp,
             AppSettings::ColorAuto,
+        ])
+        .global_settings(&[
+            AppSettings::ColoredHelp,
         ])
         .subcommand(
             SubCommand::with_name("completions")

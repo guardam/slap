@@ -11,8 +11,10 @@ about: Searches for a pattern using ripgrep and substitutes all occurrences with
 
 settings:
     - ArgRequiredElseHelp
-    - ColoredHelp
     - ColorAuto
+
+global_settings:
+    - ColoredHelp
 
 args:
     - pattern:
