@@ -5,15 +5,15 @@ eval "$(cargo r -q -- parse zsh _ -- "$@" <"$config")"
 [[ -z "$_success" ]] && exit 1
 
 printf '%s\n' \
-"opt     = '$_opt_vals'
+"opt     = '${_opt_vals[@]}'
 pos     = '$_pos_vals'
-flag    = '$_flag_vals'
+flag    = '${_flag_vals[@]}'
 mode    = '$_mode_vals'
 mvals   = '$_mvals_vals'
-minvals = '$_minvals_vals'
-maxvals = '$_maxvals_vals'
+minvals = '${_minvals_vals[@]}'
+maxvals = '${_maxvals_vals[@]}'
 
 subcommand   -> '$_subcommand'
-subcmd_scopt  = '$_subcmd_scopt_vals'
+subcmd_scopt  = '${_subcmd_scopt_vals[@]}'
 subcmd_scpos1 = '$_subcmd_scpos1_vals'"
 
