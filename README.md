@@ -11,6 +11,12 @@ Writing code to parse arguments in a shell scripting language (`bash`, `zsh`,
 process.  
 This program aims to improve that.
 
+## Can't I just use `getopt` or something similiar?
+
+`getopt` and similiar tools are not only language-dependent (slap works with a number of shells), but are also just tools to write your own argument parser.  
+slap is different, in the sense that it puts at your disposal an already written argument parser.  
+Good luck in writing in bash, powershell, fish or whatever, a full fledged argument parser (using `getopt` if you want) that takes in consideration things like argument order, possible values, subcommands, argument groups, automatic color-enabled help menus, most similiar argument name suggestions etc.
+
 ## How?
 
 You declare your CLI in YAML and pass it to slap's `stdin` and pass all your
