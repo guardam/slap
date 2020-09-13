@@ -1,6 +1,6 @@
 use {
     crate::ident_type::IdentType,
-    anyhow::{anyhow, bail},
+    anyhow::{bail, Context},
     std::convert::TryFrom,
 };
 
@@ -85,15 +85,15 @@ impl Shell {
     // elvish and powershell.
     fn parse_(
         &self,
-        matches: clap::ArgMatches,
-        var_prefix: Option<String>,
+        matches: &clap::ArgMatches,
+        var_prefix: Option<&str>,
         // Subcommands are recursive, used to mantain the subcommand prefix for variables.
-        subcommands_prefixes: Option<Vec<String>>,
+        subcommands_prefixes: Option<Vec<&str>>,
     ) -> anyhow::Result<String> {
         let vprefix = {
             let mut s = String::new();
-            if let Some(vprefix) = var_prefix.clone() {
-                s = self.ident_check(&vprefix, &IdentType::Head)?.into();
+            if let Some(vprefix) = var_prefix {
+                s = self.ident_check(vprefix, &IdentType::Head)?.into();
             }
             s
         };
@@ -137,15 +137,15 @@ impl Shell {
             buffer.push('\n');
 
             let mut subcommands_prefixes = subcommands_prefixes.unwrap_or_default();
-            subcommands_prefixes.push(subcommand.name.clone());
+            subcommands_prefixes.push(&subcommand.name);
             buffer.push_str(&self.parse_(
-                subcommand.matches.clone(),
+                &subcommand.matches,
                 var_prefix,
                 Some(subcommands_prefixes),
             )?)
         }
 
-        for (name, arg) in matches.args {
+        for (name, arg) in &matches.args {
             let arg_name = self.ident_check(name, &IdentType::Tail)?;
 
             let clap_occurs = self.str_escape(&arg.occurs.to_string());
@@ -157,7 +157,7 @@ impl Shell {
 
             let clap_indices = arg
                 .indices
-                .into_iter()
+                .iter()
                 .map(|x| x.to_string())
                 .collect::<Vec<_>>();
             let clap_indices = clap_indices.iter().map(|x| x.as_str()).collect::<Vec<_>>();
@@ -169,11 +169,9 @@ impl Shell {
             buffer.push('\n');
 
             let mut clap_vals = Vec::new();
-            for val in arg.vals.into_iter().map(|x| x.into_string()) {
-                let val = val.map_err(|_| anyhow!("String contains invalid UTF-8 data"))?;
-                clap_vals.push(val);
+            for val in &arg.vals {
+                clap_vals.push(val.to_str().context("String contains invalid UTF-8 data")?);
             }
-            let clap_vals = clap_vals.iter().map(|x| x.as_str()).collect::<Vec<_>>();
             let clap_vals = self.array_escape(&clap_vals);
             buffer.push_str(&self.assignment(
                 &format!("{}{}{}_vals", vprefix, subcommands_ident, arg_name),
@@ -188,9 +186,9 @@ impl Shell {
     pub fn parse(
         &self,
         matches: clap::ArgMatches,
-        var_prefix: Option<String>,
+        var_prefix: Option<&str>,
     ) -> anyhow::Result<String> {
-        self.parse_(matches, var_prefix, None)
+        self.parse_(&matches, var_prefix, None)
     }
 }
 
@@ -209,14 +207,14 @@ impl TryFrom<&str> for Shell {
     }
 }
 
-impl Into<clap::Shell> for Shell {
+impl<'a> Into<clap::Shell> for &'a Shell {
     fn into(self) -> clap::Shell {
-        match self {
-            Self::Bash => clap::Shell::Bash,
-            Self::Elvish => clap::Shell::Elvish,
-            Self::Fish => clap::Shell::Fish,
-            Self::PowerShell => clap::Shell::PowerShell,
-            Self::Zsh => clap::Shell::Zsh,
+        match *self {
+            Shell::Bash => clap::Shell::Bash,
+            Shell::Elvish => clap::Shell::Elvish,
+            Shell::Fish => clap::Shell::Fish,
+            Shell::PowerShell => clap::Shell::PowerShell,
+            Shell::Zsh => clap::Shell::Zsh,
         }
     }
 }

@@ -60,7 +60,7 @@ where
     pub fn completions_script(&mut self, bin_name: &str, shell: &Shell) -> anyhow::Result<String> {
         let mut completions_script = Vec::new();
         self.app
-            .gen_completions_to(bin_name, shell.clone().into(), &mut completions_script);
+            .gen_completions_to(bin_name, shell.into(), &mut completions_script);
         Ok(str::from_utf8(&completions_script)?.trim_end().into())
     }
 }
