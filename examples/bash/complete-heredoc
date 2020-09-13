@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC2154,SC2250
 
-cargo r -q -- deps dirname pwd || exit 1
-
 eval "$(cargo r -q -- parse bash _ -- "$@" <<-EOF
 name: yml_app
 version: "1.0"

@@ -1,7 +1,5 @@
 #!/usr/bin/env zsh
 
-cargo r -q -- deps dirname pwd || exit 1
-
 eval "$(cargo r -q -- parse zsh _ -- "$@" <<-EOF
 name: yml_app
 version: "1.0"

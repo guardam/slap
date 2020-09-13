@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC2154,SC2250
 
-cargo r -q -- deps dirname pwd || exit 1
-
 config="$(cargo r -q -- path -d "${BASH_SOURCE[0]}")/../complete.yml"
 eval "$(cargo r -q -- parse bash _ -- "$@" <"$config")"
 [[ -z "$_success" ]] && exit 1
