@@ -12,7 +12,7 @@ use {
     clap::{App, AppSettings, Arg, ArgMatches, SubCommand, YamlLoader},
     std::{
         convert::TryFrom,
-        env,
+        env, fs,
         io::{self, Read},
         path::Path,
         process, str,
@@ -120,7 +120,15 @@ fn this_cli() -> ArgMatches<'static> {
                     Arg::with_name("dir_only")
                         .long("dir-only")
                         .short("d")
+                        .conflicts_with("dereference")
                         .help("Gives you the absolute path of the script without including the script name")
+                )
+                .arg(
+                    Arg::with_name("dereference")
+                        .long("dereference")
+                        .short("D")
+                        .conflicts_with("dir_only")
+                        .help("If the path points to a symlink, the dereferenced path will be printed")
                 )
         )
         .get_matches()
@@ -141,6 +149,12 @@ fn path_subcmd(matches: &ArgMatches) -> anyhow::Result<()> {
     let mut current_dir = env::current_dir()?;
     if !matches.is_present("dir_only") {
         current_dir = current_dir.join(script_name);
+    }
+
+    if matches.is_present("dereference") {
+        if let Ok(dereferencedp) = fs::read_link(&current_dir) {
+            current_dir = dereferencedp;
+        }
     }
 
     println!("{}", current_dir.display());
