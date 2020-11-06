@@ -234,7 +234,7 @@ fn parse_subcmd(
     let code = shell.parse(external_matches, var_prefix)?;
     println!("{}", code);
 
-    return Ok(());
+    Ok(())
 }
 
 fn main() -> anyhow::Result<()> {
@@ -296,7 +296,7 @@ fn main() -> anyhow::Result<()> {
             let external_app_subcommands = subcommands
                 .as_vec()
                 .context("Subcommands object must be an array of maps")?
-                .into_iter()
+                .iter()
                 .map(SubCommand::from_yaml)
                 .map(|x| AppWrapper::new(x, |app| app));
             let mut xs = Vec::new();

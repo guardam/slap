@@ -51,7 +51,7 @@ impl Shell {
             Self::PowerShell => "@(".into(),
         };
         let len = xs.len();
-        for (idx, x) in xs.into_iter().enumerate() {
+        for (idx, x) in xs.iter().enumerate() {
             s.push_str(&self.str_escape(x));
             if idx < len - 1 {
                 if let Self::PowerShell = self {

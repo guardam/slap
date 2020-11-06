@@ -37,7 +37,7 @@ impl<'a> Display for Dependencies<'a> {
 impl<'a> Dependencies<'a> {
     fn parse(deps: &'_ [&'a str]) -> HashMap<&'a str, Option<PathBuf>> {
         let mut map = HashMap::new();
-        for dep in deps.into_iter() {
+        for dep in deps.iter() {
             map.insert(*dep, which::which(dep).ok());
         }
         map
