@@ -111,7 +111,7 @@ abs="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 abs="$(slap path -d "${BASH_SOURCE[0]}")"
 ```
 
-Both the snippets never dereference symlinks.
+Both the snippets never dereference symlinks. If you want to dereference symlinks use the `-D` option.
 
 ## Demo
 
