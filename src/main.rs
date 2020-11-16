@@ -277,7 +277,7 @@ fn main() -> anyhow::Result<()> {
         let mut yaml_loader = YamlLoader::load_from_str(&stdin)?;
         yaml_loader.remove(0)
     };
-    let mut yaml_config = yaml_loader.into_hash().context("Invalid YAML config")?;
+    let yaml_config = yaml_loader.into_hash().context("Invalid YAML config")?;
     config_checker::required(&yaml_config)?;
     config_checker::banned(&yaml_config)?;
 
@@ -286,25 +286,11 @@ fn main() -> anyhow::Result<()> {
         .map(|mut x| x.remove(0))
         .unwrap();
 
-    let yaml_loader = {
-        yaml_config.remove_entry(&subcommands_key);
-        let new_yaml_content = {
-            let mut buffer = String::new();
-            let mut emitter = yaml_rust::YamlEmitter::new(&mut buffer);
-            let yaml_hash = Yaml::Hash(yaml_config);
-            emitter.dump(&yaml_hash).unwrap();
-            buffer
-        };
-        let mut loader = YamlLoader::load_from_str(&new_yaml_content)?;
-        loader.remove(0)
-    };
-
     // Clap doesn't let us redirect --help and --version to stderr so we have to do it manually.
     // This block of code parses the subcommands into a Vec<AppWrapper> and removes from the
     // YamlLoader the subcommands parts so we can add them manually later to the `external_app`
     // clap::App.
     let external_app_subcommands = {
-        let yaml_config = yaml_loader.as_hash().unwrap();
         if yaml_config.contains_key(&subcommands_key) {
             let subcommands = yaml_config.get(&subcommands_key).unwrap();
             let external_app_subcommands = subcommands
@@ -321,6 +307,21 @@ fn main() -> anyhow::Result<()> {
         } else {
             Default::default()
         }
+    };
+
+    let yaml_loader = {
+        #[allow(clippy::redundant_clone)]
+        let mut yaml_config = yaml_config.clone();
+        yaml_config.remove_entry(&subcommands_key);
+        let new_yaml_content = {
+            let mut buffer = String::new();
+            let mut emitter = yaml_rust::YamlEmitter::new(&mut buffer);
+            let yaml_hash = Yaml::Hash(yaml_config);
+            emitter.dump(&yaml_hash).unwrap();
+            buffer
+        };
+        let mut loader = YamlLoader::load_from_str(&new_yaml_content)?;
+        loader.remove(0)
     };
 
     let external_app_help_subcmd = AppWrapper::new(SubCommand::with_name("help"), |app: App| {

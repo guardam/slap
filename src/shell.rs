@@ -180,7 +180,7 @@ impl Shell {
             buffer.push('\n');
         }
 
-        Ok(buffer.trim_end().into())
+        Ok(buffer)
     }
 
     pub fn parse(
@@ -188,7 +188,7 @@ impl Shell {
         matches: clap::ArgMatches,
         var_prefix: Option<&str>,
     ) -> anyhow::Result<String> {
-        self.parse_(&matches, var_prefix, None)
+        Ok(self.parse_(&matches, var_prefix, None)?.trim_end().into())
     }
 }
 
